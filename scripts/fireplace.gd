@@ -1,30 +1,19 @@
 extends Node2D
 
-## The single fireplace for the MVP.
-## Observe → act → watch it respond.
+## Simple fireplace. Intensity drives the glow for now.
 
-@onready var fire: Node2D = $Fire
 @onready var glow: Polygon2D = $Fire/Glow
-@onready var flames: GPUParticles2D = $Fire/Flames
-@onready var embers: GPUParticles2D = $Fire/Embers
+@onready var flame: Polygon2D = $Fire/Flame
 
-## 0.0 = out, 1.0 = roaring. Placeholder for the sim.
-var intensity: float = 0.75:
+var intensity: float = 0.8:
 	set(value):
 		intensity = clampf(value, 0.0, 1.0)
-		_apply_intensity()
 
 
-func _ready() -> void:
-	_apply_intensity()
-
-
-func _apply_intensity() -> void:
-	if not is_node_ready():
-		return
-
-	glow.modulate.a = lerpf(0.15, 0.85, intensity)
-	flames.amount_ratio = intensity
-	embers.amount_ratio = intensity * 0.6
-	flames.emitting = intensity > 0.01
-	embers.emitting = intensity > 0.05
+func _process(_delta: float) -> void:
+	var flicker := 1.0 + sin(Time.get_ticks_msec() * 0.012) * 0.06
+	flicker += sin(Time.get_ticks_msec() * 0.031) * 0.04
+	var alpha := intensity * flicker
+	glow.modulate.a = clampf(alpha * 0.7, 0.0, 1.0)
+	flame.modulate.a = clampf(alpha, 0.0, 1.0)
+	flame.scale = Vector2(1.0, 0.92 + intensity * 0.18 * flicker)
