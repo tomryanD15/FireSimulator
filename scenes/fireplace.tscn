@@ -1,0 +1,135 @@
+[gd_scene load_steps=6 format=3 uid="uid://bq8fireplace001"]
+
+[ext_resource type="Script" path="res://scripts/fireplace.gd" id="1_fireplace"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_flames"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(28, 4, 1)
+direction = Vector3(0, -1, 0)
+spread = 18.0
+initial_velocity_min = 40.0
+initial_velocity_max = 90.0
+gravity = Vector3(0, -20, 0)
+scale_min = 2.0
+scale_max = 5.0
+color = Color(1, 0.55, 0.12, 1)
+hue_variation_min = -0.05
+hue_variation_max = 0.08
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_embers"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(22, 2, 1)
+direction = Vector3(0, -1, 0)
+spread = 35.0
+initial_velocity_min = 20.0
+initial_velocity_max = 55.0
+gravity = Vector3(0, -8, 0)
+scale_min = 0.8
+scale_max = 1.6
+color = Color(1, 0.75, 0.25, 0.9)
+hue_variation_min = -0.02
+hue_variation_max = 0.05
+
+[sub_resource type="Gradient" id="Gradient_bg"]
+colors = PackedColorArray(0.06, 0.05, 0.05, 1, 0.12, 0.09, 0.07, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_bg"]
+gradient = SubResource("Gradient_bg")
+fill_from = Vector2(0.5, 0)
+fill_to = Vector2(0.5, 1)
+
+[node name="Fireplace" type="Node2D"]
+script = ExtResource("1_fireplace")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(0, -40)
+
+[node name="Background" type="Sprite2D" parent="."]
+z_index = -10
+position = Vector2(0, -40)
+scale = Vector2(20, 12)
+texture = SubResource("GradientTexture2D_bg")
+
+[node name="Room" type="Node2D" parent="."]
+
+[node name="Floor" type="Polygon2D" parent="Room"]
+z_index = -2
+color = Color(0.18, 0.14, 0.11, 1)
+polygon = PackedVector2Array(-320, 80, 320, 80, 320, 200, -320, 200)
+
+[node name="BackWall" type="Polygon2D" parent="Room"]
+z_index = -3
+color = Color(0.14, 0.11, 0.1, 1)
+polygon = PackedVector2Array(-320, -220, 320, -220, 320, 80, -320, 80)
+
+[node name="Hearth" type="Node2D" parent="."]
+
+[node name="StoneSurround" type="Polygon2D" parent="Hearth"]
+color = Color(0.35, 0.3, 0.26, 1)
+polygon = PackedVector2Array(-140, 70, 140, 70, 140, -130, -140, -130)
+
+[node name="InnerShadow" type="Polygon2D" parent="Hearth"]
+color = Color(0.08, 0.06, 0.05, 1)
+polygon = PackedVector2Array(-100, 50, 100, 50, 100, -100, -100, -100)
+
+[node name="LeftJamb" type="Polygon2D" parent="Hearth"]
+color = Color(0.42, 0.36, 0.3, 1)
+polygon = PackedVector2Array(-140, 70, -100, 70, -100, -130, -140, -130)
+
+[node name="RightJamb" type="Polygon2D" parent="Hearth"]
+color = Color(0.42, 0.36, 0.3, 1)
+polygon = PackedVector2Array(100, 70, 140, 70, 140, -130, 100, -130)
+
+[node name="Lintel" type="Polygon2D" parent="Hearth"]
+color = Color(0.45, 0.38, 0.32, 1)
+polygon = PackedVector2Array(-140, -100, 140, -100, 140, -130, -140, -130)
+
+[node name="Mantel" type="Polygon2D" parent="Hearth"]
+color = Color(0.5, 0.42, 0.34, 1)
+polygon = PackedVector2Array(-155, -130, 155, -130, 155, -150, -155, -150)
+
+[node name="HearthStone" type="Polygon2D" parent="Hearth"]
+color = Color(0.4, 0.34, 0.28, 1)
+polygon = PackedVector2Array(-160, 70, 160, 70, 170, 95, -170, 95)
+
+[node name="AndironLeft" type="Polygon2D" parent="Hearth"]
+color = Color(0.22, 0.2, 0.18, 1)
+polygon = PackedVector2Array(-55, 48, -40, 48, -40, 20, -55, 20)
+
+[node name="AndironRight" type="Polygon2D" parent="Hearth"]
+color = Color(0.22, 0.2, 0.18, 1)
+polygon = PackedVector2Array(40, 48, 55, 48, 55, 20, 40, 20)
+
+[node name="LogBack" type="Polygon2D" parent="Hearth"]
+color = Color(0.28, 0.18, 0.1, 1)
+polygon = PackedVector2Array(-48, 42, 48, 42, 52, 28, -52, 28)
+
+[node name="LogFront" type="Polygon2D" parent="Hearth"]
+color = Color(0.34, 0.22, 0.12, 1)
+polygon = PackedVector2Array(-40, 48, 40, 48, 44, 36, -44, 36)
+
+[node name="Fire" type="Node2D" parent="."]
+position = Vector2(0, 30)
+
+[node name="Glow" type="Polygon2D" parent="Fire"]
+z_index = 1
+color = Color(1, 0.45, 0.1, 0.55)
+polygon = PackedVector2Array(-70, 20, 70, 20, 55, -70, 0, -95, -55, -70)
+
+[node name="Flames" type="GPUParticles2D" parent="Fire"]
+z_index = 2
+amount = 48
+process_material = SubResource("ParticleProcessMaterial_flames")
+lifetime = 1.1
+preprocess = 0.5
+randomness = 0.4
+
+[node name="Embers" type="GPUParticles2D" parent="Fire"]
+z_index = 3
+amount = 16
+process_material = SubResource("ParticleProcessMaterial_embers")
+lifetime = 1.8
+preprocess = 0.4
+randomness = 0.6
